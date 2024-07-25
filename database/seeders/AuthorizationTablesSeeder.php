@@ -62,7 +62,8 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 2,
                 'name' => 'create',
                 'method' => 'GET,HEAD,POST',
-                'uri' => '/auth-users/create\r\n/auth-users',
+                'uri' => '/auth-users/create
+/auth-users',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -70,7 +71,8 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 2,
                 'name' => 'edit',
                 'method' => 'GET,HEAD,PUT,PATCH',
-                'uri' => '/auth-users/{auth-user}/edit\r\n/auth-users/{auth-user}',
+                'uri' => '/auth-users/{auth-user}/edit
+/auth-users/{auth-user}',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -126,7 +128,8 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 3,
                 'name' => 'edit',
                 'method' => 'GET,HEAD,PUT,PATCH',
-                'uri' => '/menus/{menu}/edit\r\n/menus/{menu}',
+                'uri' => '/menus/{menu}/edit
+/menus/{menu}',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -166,7 +169,8 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 4,
                 'name' => 'create',
                 'method' => 'GET,HEAD,POST',
-                'uri' => '/roles/create\r\n/roles',
+                'uri' => '/roles/create
+/roles',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -174,7 +178,8 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 4,
                 'name' => 'edit',
                 'method' => 'GET,HEAD,PUT,PATCH',
-                'uri' => '/roles/{role}/edit\r\n/roles/{role}',
+                'uri' => '/roles/{role}/edit
+/roles/{role}',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -222,7 +227,8 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 5,
                 'name' => 'create',
                 'method' => 'GET,HEAD,POST',
-                'uri' => '/permissions/create\r\n/permissions',
+                'uri' => '/permissions/create
+/permissions',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -230,7 +236,8 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 5,
                 'name' => 'edit',
                 'method' => 'GET,HEAD,PUT,PATCH',
-                'uri' => '/permissions/{permission}/edit\r\n/permissions/{permission}',
+                'uri' => '/permissions/{permission}/edit
+/permissions/{permission}',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
