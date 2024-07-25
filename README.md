@@ -16,13 +16,13 @@ composer require laravel-admin-utils/authorization
 Publish resources：
 
 ```shell
-php artisan vendor:publish --provider="Elegant\Utils\Authorization\AuthorizeServiceProvider"
+php artisan vendor:publish --provider="Elegant\Utils\Authorization\AuthorizationServiceProvider"
 ```
 
 Initialization data
 
 ```shell
-php artisan authorize:init
+php artisan authorization:init
 ```
 
 > `超级管理员` 拥有所有权限，并且所有的菜单对其可见。
@@ -30,7 +30,7 @@ php artisan authorize:init
 
 打开`http://localhost/roles`管理角色
 
-在用户模块`http://localhost/administrators`可以给用户添加角色。
+在用户模块`http://localhost/auth-users`可以给用户添加角色。
 
 ## 用法
 

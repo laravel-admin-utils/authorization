@@ -9,7 +9,7 @@ use Elegant\Utils\Authorization\Models\Administrator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
-class AuthorizeServiceProvider extends ServiceProvider
+class AuthorizationServiceProvider extends ServiceProvider
 {
     /**
      * @var array
@@ -46,9 +46,9 @@ class AuthorizeServiceProvider extends ServiceProvider
 
         // 替换配置文件
         config([
-            'auth.providers.users.model' => config('elegant-utils.authorization.administrators.model', Administrator::class),
-            'elegant-utils.admin.database.administrator_model' => config('elegant-utils.authorization.administrators.model', Administrator::class),
-            'elegant-utils.admin.database.administrator_controller' => config('elegant-utils.authorization.administrators.controller', AdministratorController::class),
+            'auth.providers.users.model' => config('elegant-utils.authorization.administrator.model', Administrator::class),
+            'elegant-utils.admin.database.administrator_model' => config('elegant-utils.authorization.administrator.model', Administrator::class),
+            'elegant-utils.admin.database.administrator_controller' => config('elegant-utils.authorization.administrator.controller', AdministratorController::class),
             'elegant-utils.admin.route.middleware.authorize' => 'admin.authorize',
         ]);
 

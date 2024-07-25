@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'administrators' => [
+    'administrator' => [
         'model' => Elegant\Utils\Authorization\Models\Administrator::class,
 //        'controller' => \Elegant\Utils\Authorization\Http\Controllers\AdministratorController::class,
     ],
@@ -43,8 +43,8 @@ return [
     ],
 
     'user_menu_relational' => [
-        'table' => 'worker_menus',
-        'user_id' => 'worker_id',
+        'table' => 'user_menus',
+        'user_id' => 'user_id',
         'menu_id' => 'menu_id',
     ],
 

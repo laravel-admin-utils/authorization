@@ -14,7 +14,7 @@ class InitCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'authorize:init';
+    protected $signature = 'authorization:init';
 
     /**
      * The console command description.

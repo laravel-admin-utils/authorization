@@ -11,19 +11,16 @@ Route::group([
     'middleware' => config('elegant-utils.admin.route.middleware'),
     'as'         => config('elegant-utils.admin.route.as'),
 ], function (Router $router) {
-    $administratorController = config('elegant-utils.authorization.administrators.controller', AdministratorController::class);
-    $administrator_table = config('elegant-utils.admin.database.administrator_table');
-    $router->resource($administrator_table, $administratorController)->names($administrator_table);
+    $administratorController = config('elegant-utils.authorization.administrator.controller', AdministratorController::class);
+    $router->resource('auth-users', $administratorController)->names('auth-users');
 
     $roleController = config('elegant-utils.authorization.roles.controller', RoleController::class);
-    $role_table = config('elegant-utils.authorization.roles.table');
-    $router->resource($role_table, $roleController)->names($role_table);
-    $router->put($role_table . '/{' . Str::singular($role_table) . '}/restore', $roleController.'@restore')->name($role_table . '.restore');
-    $router->delete($role_table . '/{' . Str::singular($role_table) . '}/delete', $roleController.'@delete')->name($role_table . '.delete');
+    $router->resource('roles', $roleController)->names('roles');
+    $router->put('roles/{role}/restore', $roleController.'@restore')->name('roles.restore');
+    $router->delete('roles/{role}/delete', $roleController.'@delete')->name('roles.delete');
 
     $permissionController = config('elegant-utils.authorization.permissions.controller', PermissionController::class);
-    $permissions_table = config('elegant-utils.authorization.permissions.table');
-    $router->resource($permissions_table, $permissionController)->names($permissions_table);
-    $router->put($permissions_table . '/{' . Str::singular($permissions_table) . '}/restore', $permissionController.'@restore')->name($permissions_table . '.restore');
-    $router->delete($permissions_table . '/{' . Str::singular($permissions_table) . '}/delete', $permissionController.'@delete')->name($permissions_table . '.delete');
+    $router->resource('permissions', $permissionController)->names('permissions');
+    $router->put('permissions/{permission}/restore', $permissionController.'@restore')->name('permissions.restore');
+    $router->delete('permissions/{permission}/delete', $permissionController.'@delete')->name('permissions.delete');
 });
