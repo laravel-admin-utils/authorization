@@ -17,21 +17,23 @@ class AuthorizationTablesSeeder extends Seeder
     public function run()
     {
         $date = date('Y-m-d H:i:s');
-        $administrator_table = config('elegant-utils.admin.database.administrator_table');
-        $menus_table = config('elegant-utils.admin.database.menus_table');
-        $roles_table = config('elegant-utils.authorization.roles.model');
-        $permisssions_table = config('elegant-utils.authorization.permissions.model');
+        $roles_model = config('elegant-utils.authorization.roles.model');
+        $permisssions_model = config('elegant-utils.authorization.permissions.model');
 
         // create a role.
-        $roles_table::query()->truncate();
-        $roles_table::query()->create([
+        $roles_model::query()->truncate();
+        $roles_model::query()->create([
             'name' => 'Administrator',
             'slug' => 'administrator',
         ]);
 
+        // add role to user.
+        $user_model = config('elegant-utils.authorization.administrator.model');
+        $user_model::query()->first()->roles()->save($roles_model::query()->first());
+
         // add default permissions.
-        $permisssions_table::query()->truncate();
-        $permisssions_table::query()->insert([
+        $permisssions_model::query()->truncate();
+        $permisssions_model::query()->insert([
             [
                 'menu_id' => 0,
                 'name' => 'all',
@@ -52,7 +54,7 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 2,
                 'name' => 'list',
                 'method' => 'GET,HEAD',
-                'uri' => '/' . $administrator_table,
+                'uri' => '/auth-users',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -60,8 +62,7 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 2,
                 'name' => 'create',
                 'method' => 'GET,HEAD,POST',
-                'uri' => '/' . $administrator_table . '/create
-/' . $administrator_table,
+                'uri' => '/auth-users/create\r\n/auth-users',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -69,8 +70,7 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 2,
                 'name' => 'edit',
                 'method' => 'GET,HEAD,PUT,PATCH',
-                'uri' => '/' . $administrator_table . '/{' . Str::singular($administrator_table) . '}/edit
-/' . $administrator_table . '/{' . Str::singular($administrator_table) . '}',
+                'uri' => '/auth-users/{auth-user}/edit\r\n/auth-users/{auth-user}',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -78,7 +78,7 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 2,
                 'name' => 'show',
                 'method' => 'GET,HEAD',
-                'uri' => '/' . $administrator_table . '/{' . Str::singular($administrator_table) . '}',
+                'uri' => '/auth-users/{auth-user}',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -86,7 +86,7 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 2,
                 'name' => 'destroy',
                 'method' => 'DELETE',
-                'uri' => '/' . $administrator_table . '/{' . Str::singular($administrator_table) . '}',
+                'uri' => '/auth-users/{auth-user}',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -94,7 +94,7 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 2,
                 'name' => 'delete',
                 'method' => 'DELETE',
-                'uri' => '/' . $administrator_table . '/{' . Str::singular($administrator_table) . '}/delete',
+                'uri' => '/auth-users/{auth-user}/delete',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -102,7 +102,7 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 2,
                 'name' => 'restore',
                 'method' => 'PUT',
-                'uri' => '/' . $administrator_table . '/{' . Str::singular($administrator_table) . '}/restore',
+                'uri' => '/auth-users/{auth-user}/restore',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -110,7 +110,7 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 3,
                 'name' => 'list',
                 'method' => 'GET,HEAD',
-                'uri' => '/' . $menus_table,
+                'uri' => '/menus',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -118,7 +118,7 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 3,
                 'name' => 'create',
                 'method' => 'POST',
-                'uri' => '/' . $menus_table,
+                'uri' => '/menus',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -126,8 +126,7 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 3,
                 'name' => 'edit',
                 'method' => 'GET,HEAD,PUT,PATCH',
-                'uri' => '/' . $menus_table . '/{' . Str::singular($menus_table) . '}/edit
-/' . $menus_table . '/{' . Str::singular($menus_table) . '}',
+                'uri' => '/menus/{menu}/edit\r\n/menus/{menu}',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -135,7 +134,7 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 3,
                 'name' => 'destroy',
                 'method' => 'DELETE',
-                'uri' => '/' . $menus_table . '/{' . Str::singular($menus_table) . '}',
+                'uri' => '/menus/{menu}',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -143,7 +142,7 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 3,
                 'name' => 'delete',
                 'method' => 'DELETE',
-                'uri' => '/' . $menus_table . '/{' . Str::singular($menus_table) . '}/delete',
+                'uri' => '/menus/{menu}/delete',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
@@ -151,14 +150,128 @@ class AuthorizationTablesSeeder extends Seeder
                 'menu_id' => 3,
                 'name' => 'restore',
                 'method' => 'PUT',
-                'uri' => '/' . $menus_table . '/{' . Str::singular($menus_table) . '}/restore',
+                'uri' => '/menus/{menu}/restore',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 4,
+                'name' => 'list',
+                'method' => 'GET,HEAD',
+                'uri' => '/roles',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 4,
+                'name' => 'create',
+                'method' => 'GET,HEAD,POST',
+                'uri' => '/roles/create\r\n/roles',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 4,
+                'name' => 'edit',
+                'method' => 'GET,HEAD,PUT,PATCH',
+                'uri' => '/roles/{role}/edit\r\n/roles/{role}',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 4,
+                'name' => 'show',
+                'method' => 'GET,HEAD',
+                'uri' => '/roles/{role}',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 4,
+                'name' => 'destroy',
+                'method' => 'DELETE',
+                'uri' => '/roles/{role}',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 4,
+                'name' => 'delete',
+                'method' => 'DELETE',
+                'uri' => '/roles/{role}/delete',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 4,
+                'name' => 'restore',
+                'method' => 'PUT',
+                'uri' => '/roles/{role}/restore',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 5,
+                'name' => 'list',
+                'method' => 'GET,HEAD',
+                'uri' => '/permissions',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 5,
+                'name' => 'create',
+                'method' => 'GET,HEAD,POST',
+                'uri' => '/permissions/create\r\n/permissions',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 5,
+                'name' => 'edit',
+                'method' => 'GET,HEAD,PUT,PATCH',
+                'uri' => '/permissions/{permission}/edit\r\n/permissions/{permission}',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 5,
+                'name' => 'show',
+                'method' => 'GET,HEAD',
+                'uri' => '/permissions/{permission}',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 5,
+                'name' => 'destroy',
+                'method' => 'DELETE',
+                'uri' => '/permissions/{permission}',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 5,
+                'name' => 'delete',
+                'method' => 'DELETE',
+                'uri' => '/permissions/{permission}/delete',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 5,
+                'name' => 'restore',
+                'method' => 'PUT',
+                'uri' => '/permissions/{permission}/restore',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
         ]);
 
-        // add default menus.
-        Menu::query()->truncate();
+        // add permission to role.
+        $roles_model::query()->first()->permissions()->save($permisssions_model::query()->first());
+
+        // add menus.
         Menu::query()->insert([
             [
                 'parent_id' => 0,

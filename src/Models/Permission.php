@@ -86,6 +86,10 @@ class Permission extends Model
                 return $result;
             });
 
+        if (empty($permissions)) {
+            return  [];
+        }
+
         $data = [];
 
         foreach ($permissions as $key => $permission) {

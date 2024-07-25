@@ -4,7 +4,7 @@ namespace Elegant\Utils\Authorization;
 
 use Elegant\Utils\Authorization\Http\Controllers\AdministratorController;
 use Elegant\Utils\Form;
-use Elegant\Utils\Authorization\Http\Middleware\AuthorizeMiddleware;
+use Elegant\Utils\Authorization\Http\Middleware\AuthorizationMiddleware;
 use Elegant\Utils\Authorization\Models\Administrator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
@@ -30,7 +30,7 @@ class AuthorizationServiceProvider extends ServiceProvider
         }
 
         if ($this->app->runningInConsole()) {
-            $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'admin-authorize-migrations');
+            $this->publishes([__DIR__ . '/../database' => database_path()], 'admin-authorize-migrations');
             $this->publishes([__DIR__ . '/../config' => config_path('elegant-utils')], 'admin-authorize-config');
         }
     }
@@ -42,7 +42,7 @@ class AuthorizationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        app('router')->aliasMiddleware('admin.authorize', AuthorizeMiddleware::class);
+        app('router')->aliasMiddleware('admin.authorize', AuthorizationMiddleware::class);
 
         // 替换配置文件
         config([
