@@ -6,11 +6,10 @@ use Elegant\Utils\Form;
 use Elegant\Utils\Http\Controllers\AdminController;
 use Elegant\Utils\Show;
 use Elegant\Utils\Table;
+use Illuminate\Support\Facades\Route;
 
 class PermissionController extends AdminController
 {
-    protected $method = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'];
-
     /**
      * @return array|\Illuminate\Contracts\Translation\Translator|string|null
      */
@@ -36,15 +35,18 @@ class PermissionController extends AdminController
         $table->column('id', 'ID')->sortable();
         $table->column('menu.title', __('admin.menus'));
         $table->column('name', __('admin.name'));
-        $table->column('method', __('admin.http_method'))->display(function ($method) {
-            return collect($method)->map(function ($name) {
-                return "<span class='badge badge-info'>{$name}</span>";
-            })->implode('&nbsp;');
-        });
-        $table->column('uri', __('admin.http_uri'))->display(function ($uri) {
-            return collect(explode("\n", $uri))->map(function ($path) {
-                return $path;
+        $table->column('http', __('admin.http_uri'))->display(function ($http) {
+            return collect($http)->map(function ($path) {
+                return "<span>{$path}</span>";;
             })->implode("<br/>");
+        });
+
+        $table->actions(function (Table\Displayers\Actions $actions) {
+            if ($actions->getKey() == 1) {
+                $actions->disableDestroy();
+                $actions->disableEdit();
+                $actions->disableView();
+            }
         });
 
         return $table;
@@ -63,8 +65,7 @@ class PermissionController extends AdminController
         $show->field('id', 'ID');
         $show->field('menu_id', __('admin.menus'));
         $show->field('name', __('admin.name'));
-        $show->field('method', __('admin.http_method'));
-        $show->field('uri', __('admin.http_uri'));
+        $show->field('http', __('admin.http_uri'));
 
         return $show;
     }
@@ -82,9 +83,27 @@ class PermissionController extends AdminController
 
         $form->select('menu_id', __('admin.menus'))->options($menuModel::selectOptions());
         $form->text('name', __('admin.name'));
-        $form->multipleSelect('method', __('admin.http_method'))->options(array_combine($this->method, $this->method));
-        $form->textarea('uri', __('admin.http_uri'));
+        $form->multipleSelect('http', __('admin.http_uri'))->options($this->getHttpOptions());
 
         return $form;
+    }
+
+    private function getHttpOptions()
+    {
+        $data = [];
+
+        foreach (Route::getRoutes() as $route) {
+            if (!empty($route->getAction('as')) && substr($route->getAction('as'), 0,6) === config('elegant-utils.admin.route.as')) {
+                $domainAndUri = $route->getDomain().$route->uri();
+
+                $methods = $route->methods();
+
+                $data[end($methods).$domainAndUri] = $route;
+            }
+        }
+
+        $data = array_keys($data);
+
+        return array_combine($data, $data);
     }
 }

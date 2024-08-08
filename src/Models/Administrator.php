@@ -118,20 +118,15 @@ class Administrator extends BaseModel
         if ($this->isAdministrator()) {
             return true;
         }
-
+        
+        $domainAndUri = $route->getDomain().$route->uri();
+        $methods = $route->methods();
+        
         foreach ($this->allPermissions() as $permissions) {
-            if ($permissions['uri'] === '*') {
+            if ($permissions['http'] === '*') {
                 return true;
             }
-
-            $uris = preg_split('/\r\n|\r|\n/', $permissions['uri'], -1, PREG_SPLIT_NO_EMPTY);
-            array_walk($uris, function (&$uri) {
-                if ($uri !== '/') {
-                    $uri = ltrim($uri, '/');
-                }
-            });
-
-            if (!empty(array_intersect($permissions['method'], $route->methods)) && in_array($route->uri(), $uris)) {
+            if (in_array(end($methods).$domainAndUri, $permissions['http'])) {
                 return true;
             }
         }

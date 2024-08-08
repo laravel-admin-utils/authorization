@@ -50,19 +50,4 @@ return [
 
     // Limit the maximum number of administrator roles that can be selected, default is 0, 0 means no limit
 //    'users_maximum_roles' => 0,
-
-    'route' => [
-        // Routes that need to be excluded when authorizing
-        'excepts' => [
-            "login",
-            "logout",
-            "setting",
-            "_handle_form_",
-            "_handle_action_",
-            "_handle_selectable_",
-            "_handle_renderable_",
-            "_require_config",
-            "{fallbackPlaceholder}",
-        ],
-    ]
 ];

@@ -21,6 +21,7 @@ class AuthorizationMiddleware
             return $next($request);
         }
 
+//        dump($request->route());
         if (Auth::user()->canAccessRoute($request->route())) {
             return $next($request);
         }
@@ -44,13 +45,6 @@ class AuthorizationMiddleware
      */
     protected function shouldPassThrough($request): bool
     {
-        return collect(config('elegant-utils.authorization.route.excepts', []))
-            ->contains(function ($except) use ($request) {
-                if ($except !== '/') {
-                    $except = ltrim($except, '/');
-                }
-
-                return $request->is($except);
-            });
+        return empty($request->route()->getAction('as')) || substr($request->route()->getAction('as'), 0,6) !== config('elegant-utils.admin.route.as');
     }
 }

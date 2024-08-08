@@ -22,8 +22,11 @@ class Permission extends Model
     protected $fillable = [
         'menu_id',
         'name',
-        'method',
-        'uri',
+        'http',
+    ];
+    
+    protected $casts = [
+        'http' => 'array',
     ];
 
     /**
@@ -57,17 +60,6 @@ class Permission extends Model
         $menuModel = config('elegant-utils.admin.database.menus_model');
 
         return $this->belongsTo($menuModel, 'menu_id');
-    }
-
-    public function setMethodAttribute($value)
-    {
-        $this->attributes['method'] = implode(',', $value);
-    }
-
-    // 修改器：从数据库中获取 tags 字段并转换为数组
-    public function getMethodAttribute($value)
-    {
-        return explode(',', $value);
     }
 
     public static function getOptions()

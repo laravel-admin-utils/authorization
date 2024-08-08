@@ -39,8 +39,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('menu_id')->default(0);
             $table->string('name', 50)->unique();
-            $table->string('method', 50);
-            $table->string('uri');
+            $table->string('http');
             $table->timestamps();
             $table->softDeletes();
         });
