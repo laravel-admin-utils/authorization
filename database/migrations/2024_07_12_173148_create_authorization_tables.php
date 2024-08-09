@@ -38,7 +38,7 @@ return new class extends Migration
         Schema::create(config('elegant-utils.authorization.permissions.table'), function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('menu_id')->default(0);
-            $table->string('name', 50)->unique();
+            $table->string('name', 50);
             $table->string('http');
             $table->timestamps();
             $table->softDeletes();
