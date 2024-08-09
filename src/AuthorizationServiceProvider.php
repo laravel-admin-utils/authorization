@@ -21,17 +21,21 @@ class AuthorizationServiceProvider extends ServiceProvider
     /**
      * {@inheritdoc}
      */
-    public function boot()
+    public function boot(Authorization $extension)
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'admin-authorize-view');
+        if (! Authorization::boot()) {
+            return ;
+        }
 
-        if (file_exists($routes = __DIR__.'/../routes/web.php')) {
+        $this->loadViewsFrom($extension->views, 'admin-authorize-view');
+
+        if (file_exists($routes = $extension->routes)) {
             $this->loadRoutesFrom($routes);
         }
 
         if ($this->app->runningInConsole()) {
-            $this->publishes([__DIR__ . '/../database' => database_path()], 'admin-authorize-migrations');
-            $this->publishes([__DIR__ . '/../config' => config_path('elegant-utils')], 'admin-authorize-config');
+            $this->publishes([$extension->database => database_path()], 'admin-authorize-migrations');
+            $this->publishes([$extension->config => config_path('elegant-utils')], 'admin-authorize-config');
         }
     }
 
