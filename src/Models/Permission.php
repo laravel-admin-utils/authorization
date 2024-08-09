@@ -32,14 +32,14 @@ class Permission extends Model
     /**
      * @return BelongsToMany
      */
-    public function users(): BelongsToMany
+    public function administrators(): BelongsToMany
     {
-        $userModel = config('elegant-utils.authorization.users.model');
-        $table = config('elegant-utils.authorization.user_permission_relational.table');
-        $permission_id = config('elegant-utils.authorization.user_permission_relational.permission_id');
-        $user_id = config('elegant-utils.authorization.user_permission_relational.user_id');
+        $userModel = config('elegant-utils.authorization.administrator.model');
+        $table = config('elegant-utils.authorization.administrator_permission_relational.table');
+        $permission_id = config('elegant-utils.authorization.administrator_permission_relational.permission_id');
+        $administrator_id = config('elegant-utils.authorization.administrator_permission_relational.administrator_id');
 
-        return $this->belongsToMany($userModel, $table, $permission_id, $user_id)->withTimestamps();
+        return $this->belongsToMany($userModel, $table, $permission_id, $administrator_id)->withTimestamps();
     }
 
     /**

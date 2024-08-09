@@ -17,6 +17,7 @@ class Role extends Model
 
     protected $fillable = [
         'name',
+        'slug',
     ];
 
     /**
@@ -38,14 +39,14 @@ class Role extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function users(): BelongsToMany
+    public function administrators(): BelongsToMany
     {
-        $userModel = config('elegant-utils.authorization.users.model');
-        $table = config('elegant-utils.authorization.user_role_relational.table');
-        $role_id = config('elegant-utils.authorization.user_role_relational.role_id');
-        $user_id = config('elegant-utils.authorization.user_role_relational.user_id');
+        $userModel = config('elegant-utils.authorization.administrator.model');
+        $table = config('elegant-utils.authorization.administrator_role_relational.table');
+        $role_id = config('elegant-utils.authorization.administrator_role_relational.role_id');
+        $administrator_id = config('elegant-utils.authorization.administrator_role_relational.administrator_id');
 
-        return $this->belongsToMany($userModel, $table, $role_id, $user_id)->withTimestamps();
+        return $this->belongsToMany($userModel, $table, $role_id, $administrator_id)->withTimestamps();
     }
 
     /**

@@ -12,7 +12,7 @@ Route::group([
     'as'         => config('elegant-utils.admin.route.as'),
 ], function (Router $router) {
     $administratorController = config('elegant-utils.authorization.administrator.controller', AdministratorController::class);
-    $router->resource('auth-users', $administratorController)->names('auth-users');
+    $router->resource('administrators', $administratorController)->names('administrators');
 
     $roleController = config('elegant-utils.authorization.roles.controller', RoleController::class);
     $router->resource('roles', $roleController)->names('roles');

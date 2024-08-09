@@ -19,11 +19,11 @@ class Administrator extends BaseModel
     public function roles(): BelongsToMany
     {
         $roleModel = config('elegant-utils.authorization.roles.model');
-        $table = config('elegant-utils.authorization.user_role_relational.table');
-        $user_id = config('elegant-utils.authorization.user_role_relational.user_id');
-        $role_id = config('elegant-utils.authorization.user_role_relational.role_id');
+        $table = config('elegant-utils.authorization.administrator_role_relational.table');
+        $administrator_id = config('elegant-utils.authorization.administrator_role_relational.administrator_id');
+        $role_id = config('elegant-utils.authorization.administrator_role_relational.role_id');
 
-        return $this->belongsToMany($roleModel, $table, $user_id, $role_id)->withTimestamps();
+        return $this->belongsToMany($roleModel, $table, $administrator_id, $role_id)->withTimestamps();
     }
 
     /**
@@ -32,11 +32,11 @@ class Administrator extends BaseModel
     public function permissions(): BelongsToMany
     {
         $permissionModel = config('elegant-utils.authorization.permissions.model');
-        $table = config('elegant-utils.authorization.user_permission_relational.table');
-        $user_id = config('elegant-utils.authorization.user_permission_relational.user_id');
-        $permission_id = config('elegant-utils.authorization.user_permission_relational.permission_id');
+        $table = config('elegant-utils.authorization.administrator_permission_relational.table');
+        $administrator_id = config('elegant-utils.authorization.administrator_permission_relational.administrator_id');
+        $permission_id = config('elegant-utils.authorization.administrator_permission_relational.permission_id');
 
-        return $this->belongsToMany($permissionModel, $table, $user_id, $permission_id)->withTimestamps();
+        return $this->belongsToMany($permissionModel, $table, $administrator_id, $permission_id)->withTimestamps();
     }
 
     /**
@@ -45,11 +45,11 @@ class Administrator extends BaseModel
     public function menus(): BelongsToMany
     {
         $menuModel = config('elegant-utils.admin.database.menus_model');
-        $table = config('elegant-utils.authorization.user_menu_relational.table');
-        $user_id = config('elegant-utils.authorization.user_menu_relational.user_id');
-        $menu_id = config('elegant-utils.authorization.user_menu_relational.menu_id');
+        $table = config('elegant-utils.authorization.administrator_menu_relational.table');
+        $administrator_id = config('elegant-utils.authorization.administrator_menu_relational.administrator_id');
+        $menu_id = config('elegant-utils.authorization.administrator_menu_relational.menu_id');
 
-        return $this->belongsToMany($menuModel, $table, $user_id, $menu_id)->withTimestamps();
+        return $this->belongsToMany($menuModel, $table, $administrator_id, $menu_id)->withTimestamps();
     }
 
     /**
@@ -118,10 +118,10 @@ class Administrator extends BaseModel
         if ($this->isAdministrator()) {
             return true;
         }
-        
+
         $domainAndUri = $route->getDomain().$route->uri();
         $methods = $route->methods();
-        
+
         foreach ($this->allPermissions() as $permissions) {
             if ($permissions['http'] === '*') {
                 return true;

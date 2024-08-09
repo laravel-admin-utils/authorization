@@ -18,9 +18,9 @@ return [
 //        'controller' => \Elegant\Utils\Authorization\Http\Controllers\PermissionController::class,
     ],
 
-    'user_role_relational' => [
-        'table' => 'user_roles',
-        'user_id' => 'user_id',
+    'administrator_role_relational' => [
+        'table' => 'administrator_roles',
+        'administrator_id' => 'administrator_id',
         'role_id' => 'role_id',
     ],
 
@@ -30,9 +30,9 @@ return [
         'permission_id' => 'permission_id',
     ],
 
-    'user_permission_relational' => [
-        'table' => 'user_permissions',
-        'user_id' => 'user_id',
+    'administrator_permission_relational' => [
+        'table' => 'administrator_permissions',
+        'administrator_id' => 'administrator_id',
         'permission_id' => 'permission_id',
     ],
 
@@ -42,9 +42,9 @@ return [
         'menu_id' => 'menu_id',
     ],
 
-    'user_menu_relational' => [
-        'table' => 'user_menus',
-        'user_id' => 'user_id',
+    'administrator_menu_relational' => [
+        'table' => 'administrator_menus',
+        'administrator_id' => 'administrator_id',
         'menu_id' => 'menu_id',
     ],
 
