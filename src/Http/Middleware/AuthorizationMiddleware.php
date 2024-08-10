@@ -21,7 +21,6 @@ class AuthorizationMiddleware
             return $next($request);
         }
 
-//        dump($request->route());
         if (Auth::user()->canAccessRoute($request->route())) {
             return $next($request);
         }

@@ -23,9 +23,13 @@ class AuthorizationServiceProvider extends ServiceProvider
      */
     public function boot(Authorization $extension)
     {
-        if (! Authorization::boot()) {
+        if (! $extension::boot()) {
             return ;
         }
+
+        $this->app->booted(function () use ($extension) {
+            $extension::routes($extension->routes);
+        });
 
         $this->loadViewsFrom($extension->views, 'admin-authorize-view');
 

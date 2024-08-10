@@ -15,10 +15,4 @@ class Authorization extends Extension
     public $database = __DIR__ . '/../database';
 
     public $config = __DIR__ . '/../config';
-
-    public $menu = [
-        'title' => 'Authorization',
-        'path' => 'authorization',
-        'icon' => 'fa-gears',
-    ];
 }

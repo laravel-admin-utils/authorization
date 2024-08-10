@@ -114,9 +114,9 @@ If you're using laravel-admin actions and want access control, let's take the us
                   $model->replicate()->save();
               });
           } catch (\Exception $exception) {
-              return $this->response()->error("复制失败！: {$exception->getMessage()}")->send();
+              return $this->response()->error("replication failed！: {$exception->getMessage()}")->send();
           }
-          return $this->response()->success('复制成功！')->refresh()->send();
+          return $this->response()->success('replication successful！')->refresh()->send();
 
           // If you don't need permission judgment, handle it in App\Admin\Actions\Replicate::handle() logic
           //return $this->handleAction();
