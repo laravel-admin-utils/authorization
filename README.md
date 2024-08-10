@@ -1,4 +1,4 @@
-# authorize extension for laravel-admin
+# authorization utils for laravel-admin
 
 ## Preview
 

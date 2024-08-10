@@ -31,6 +31,7 @@ class PermissionController extends AdminController
     protected function table()
     {
         $table = new Table(new $this->model());
+        $table->model()->orderByDesc('id');
 
         $table->column('id', 'ID')->sortable();
         $table->column('menu.title', __('admin.menus'));

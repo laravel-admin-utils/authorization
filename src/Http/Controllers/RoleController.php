@@ -20,6 +20,10 @@ class RoleController extends AdminController
     {
         return trans('admin.roles');
     }
+    public function model()
+    {
+        return config('elegant-utils.authorization.roles.model');
+    }
 
     /**
      * Make a table builder.
@@ -28,8 +32,7 @@ class RoleController extends AdminController
      */
     public function table()
     {
-        $roleModel = config('elegant-utils.authorization.roles.model');
-        $table = new Table(new $roleModel());
+        $table = new Table(new $this->model());
         $table->model()->orderByDesc('id');
 
         $table->column('id', 'ID')->sortable();
@@ -75,9 +78,7 @@ class RoleController extends AdminController
      */
     protected function detail($id)
     {
-        $roleModel = config('elegant-utils.authorization.roles.model');
-
-        $show = new Show($roleModel::findOrFail($id));
+        $show = new Show($this->model::findOrFail($id));
 
         $show->field('id', 'ID');
         $show->field('slug', trans('admin.slug'));
@@ -95,26 +96,23 @@ class RoleController extends AdminController
      */
     public function form()
     {
-        $roleModel = config('elegant-utils.authorization.roles.model');
-        $menuModel = config('elegant-utils.admin.database.menus_model');
-        $permissionModel = config('elegant-utils.authorization.permissions.model');
-        $form = new Form(new $roleModel());
+        $form = new Form(new $this->model());
 
-        $form->row(function (Form\Layout\Row $row) use ($roleModel) {
-            $row->column(6, function (Form\Layout\Column $column) use ($roleModel) {
+        $form->row(function (Form\Layout\Row $row) {
+            $row->column(6, function (Form\Layout\Column $column) {
                 $column->text('name', trans('admin.name'))
-                    ->creationRules(['required', "unique:{$roleModel}"])
-                    ->updateRules(['required', "unique:{$roleModel},name,{{id}}"]);
+                    ->creationRules(['required', "unique:{$this->model}"])
+                    ->updateRules(['required', "unique:{$this->model},name,{{id}}"]);
             });
-            $row->column(6, function (Form\Layout\Column $column) use ($roleModel) {
+            $row->column(6, function (Form\Layout\Column $column) {
                 $column->text('slug', trans('admin.slug'))
                     ->with(function ($value, Form\Field $field) {
                         if ($value == 'administrator') {
                             $field->readonly();
                         }
                     })
-                    ->creationRules(['required', "unique:{$roleModel}"])
-                    ->updateRules(['required', "unique:{$roleModel},slug,{{id}}"]);
+                    ->creationRules(['required', "unique:{$this->model}"])
+                    ->updateRules(['required', "unique:{$this->model},slug,{{id}}"]);
             });
         });
 
