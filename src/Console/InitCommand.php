@@ -158,8 +158,7 @@ class InitCommand extends Command
             $routes = $this->directory . '\routes.php';
             $routes_contents = $this->laravel['files']->get($routes);
 
-            $search = "    });
-});";
+            $search = "        // done Don't delete this line of comment";
             $replace = $this->getStub('routes');
 
             $this->laravel['files']->put($routes, str_replace($search, $replace, $routes_contents));
