@@ -25,9 +25,9 @@ php artisan authorization:init
 > The 'Administrator' has all the operation and menu permissions
 
 
-open the `http://localhost/roles` manage roles
+open the `http://localhost/auth/roles` manage roles
 
-in the `http://localhost/administrators` you can add roles to administrator
+in the `http://localhost/auth/users` you can add roles to administrator
 
 ### Action access control via routing
 

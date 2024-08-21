@@ -1,0 +1,12 @@
+        // auth_roles
+        Route::resource('auth/roles', 'AuthRoleController')->names('auth.roles');
+        Route::put('auth/roles/{role}/restore', 'AuthRoleController@restore')->name('auth.roles.restore');
+        Route::delete('auth/roles/{role}/delete', 'AuthRoleController@delete')->name('auth.roles.delete');
+
+        // auth_permissions
+        Route::resource('auth/permissions', 'AuthPermissionController')->names('auth.permissions');
+        Route::put('auth/permissions/{permission}/restore', 'AuthPermissionController@restore')->name('auth.permissions.restore');
+        Route::delete('auth/permissions/{permission}/delete', 'AuthPermissionController@delete')->name('auth.permissions.delete');
+
+    });
+});

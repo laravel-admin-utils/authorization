@@ -44,6 +44,6 @@ class AuthorizationMiddleware
      */
     protected function shouldPassThrough($request): bool
     {
-        return empty($request->route()->getAction('as')) || substr($request->route()->getAction('as'), 0,6) !== config('elegant-utils.admin.route.as');
+        return in_array($request->route()->getAction()['as'], config('elegant-utils.authorization.excludes'));
     }
 }

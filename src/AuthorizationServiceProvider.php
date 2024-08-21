@@ -5,7 +5,7 @@ namespace Elegant\Utils\Authorization;
 use Elegant\Utils\Authorization\Http\Controllers\AdministratorController;
 use Elegant\Utils\Form;
 use Elegant\Utils\Authorization\Http\Middleware\AuthorizationMiddleware;
-use Elegant\Utils\Authorization\Models\Administrator;
+use Elegant\Utils\Authorization\Models\AuthUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
@@ -18,6 +18,8 @@ class AuthorizationServiceProvider extends ServiceProvider
         Console\InitCommand::class,
     ];
 
+    protected $middlewareGroups = [];
+
     /**
      * {@inheritdoc}
      */
@@ -27,19 +29,11 @@ class AuthorizationServiceProvider extends ServiceProvider
             return ;
         }
 
-        $this->app->booted(function () use ($extension) {
-            $extension::routes($extension->routes);
-        });
-
         $this->loadViewsFrom($extension->views, 'admin-authorize-view');
 
-        if (file_exists($routes = $extension->routes)) {
-            $this->loadRoutesFrom($routes);
-        }
-
         if ($this->app->runningInConsole()) {
-            $this->publishes([$extension->database => database_path()], 'admin-authorize-migrations');
             $this->publishes([$extension->config => config_path('elegant-utils')], 'admin-authorize-config');
+            $this->publishes([$extension->database => database_path()], 'admin-authorize-migrations');
         }
     }
 
@@ -50,15 +44,11 @@ class AuthorizationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        app('router')->aliasMiddleware('admin.authorize', AuthorizationMiddleware::class);
+        $router = app('router');
 
-        // 替换配置文件
-        config([
-            'auth.providers.users.model' => config('elegant-utils.authorization.administrator.model', Administrator::class),
-            'elegant-utils.admin.database.administrator_model' => config('elegant-utils.authorization.administrator.model', Administrator::class),
-            'elegant-utils.admin.database.administrator_controller' => config('elegant-utils.authorization.administrator.controller', AdministratorController::class),
-            'elegant-utils.admin.route.middleware.authorize' => 'admin.authorize',
-        ]);
+        $router->aliasMiddleware('admin.authorize', AuthorizationMiddleware::class);
+
+        $router->middlewareGroup('admin', array_merge($router->getMiddlewareGroups()['admin'], ['admin.authorize']));
 
         $this->commands($this->commands);
 

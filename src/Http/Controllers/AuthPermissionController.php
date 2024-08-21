@@ -8,7 +8,7 @@ use Elegant\Utils\Show;
 use Elegant\Utils\Table;
 use Illuminate\Support\Facades\Route;
 
-class PermissionController extends AdminController
+class AuthPermissionController extends AdminController
 {
     /**
      * @return array|\Illuminate\Contracts\Translation\Translator|string|null
@@ -18,9 +18,12 @@ class PermissionController extends AdminController
         return trans('admin.permissions');
     }
 
+    /**
+     * @return \Illuminate\Config\Repository|\Illuminate\Foundation\Application|mixed|string|null
+     */
     public function model()
     {
-        return config('elegant-utils.authorization.permissions.model');
+        return config('elegant-utils.authorization.permission.model');
     }
 
     /**
@@ -34,7 +37,9 @@ class PermissionController extends AdminController
         $table->model()->orderByDesc('id');
 
         $table->column('id', 'ID')->sortable();
-        $table->column('menu.title', __('admin.menus'));
+        $table->column('menu.title', __('admin.menus'))->display(function($menu) {
+            return $menu ?? trans('admin.all');
+        });
         $table->column('name', __('admin.name'));
         $table->column('http', __('admin.http_uri'))->display(function ($http) {
             return collect($http)->map(function ($path) {
@@ -78,23 +83,34 @@ class PermissionController extends AdminController
      */
     protected function form()
     {
-        $menuModel = config('elegant-utils.admin.database.menus_model');
-
         $form = new Form(new $this->model());
 
-        $form->select('menu_id', __('admin.menus'))->options($menuModel::selectOptions());
+        $form->select('menu_id', __('admin.menus'))->options($this->getMenuOptions());
         $form->text('name', __('admin.name'));
         $form->multipleSelect('http', __('admin.http_uri'))->options($this->getHttpOptions());
 
         return $form;
     }
 
+    /**
+     * @return array
+     */
+    protected function getMenuOptions()
+    {
+        $menuModel = config('elegant-utils.admin.database.menu_model');
+
+        return $menuModel::selectOptions();
+    }
+
+    /**
+     * @return array
+     */
     private function getHttpOptions()
     {
         $data = [];
 
         foreach (Route::getRoutes() as $route) {
-            if (!empty($route->getAction('as')) && substr($route->getAction('as'), 0,6) === config('elegant-utils.admin.route.as')) {
+            if (isset($route->getAction()['middleware']) && in_array('admin', $route->getAction()['middleware']) && !in_array($route->getAction()['as'], config('elegant-utils.authorization.excludes'))) {
                 $domainAndUri = $route->getDomain().$route->uri();
 
                 $methods = $route->methods();
@@ -104,6 +120,8 @@ class PermissionController extends AdminController
         }
 
         $data = array_keys($data);
+
+        array_unshift($data, '*');
 
         return array_combine($data, $data);
     }

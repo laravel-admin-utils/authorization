@@ -16,13 +16,10 @@ class AuthorizationTablesSeeder extends Seeder
     public function run()
     {
         $date = date('Y-m-d H:i:s');
-        $menus_model = config('elegant-utils.admin.database.menus_model');
-        $roles_model = config('elegant-utils.authorization.roles.model');
-        $permisssions_model = config('elegant-utils.authorization.permissions.model');
+        $menus_model = config('elegant-utils.admin.database.menu_model');
 
-
-        // 如果不存在角色菜单，创建一个
-        if (!$menus_model::query()->where('uri', 'roles')->exists()) {
+        // If a role menu does not exist, create one
+        if (!$menus_model::query()->where('uri', 'auth/roles')->exists()) {
             // 创建菜单项
             $lastOrder = $menus_model::query()->max('order');
             $menus_model::query()->create([
@@ -30,11 +27,11 @@ class AuthorizationTablesSeeder extends Seeder
                 'order' => $lastOrder++,
                 'title' => 'Roles',
                 'icon' => 'fas fa-user',
-                'uri' => 'roles',
+                'uri' => 'auth/roles',
             ]);
         }
-        // 如果不存在权限菜单，创建一个
-        if (!$menus_model::query()->where('uri', 'permissions')->exists()) {
+        // If the permissions menu does not exist, create one
+        if (!$menus_model::query()->where('uri', 'auth/permissions')->exists()) {
             // 创建菜单项
             $lastOrder = $menus_model::query()->max('order');
             $menus_model::query()->create([
@@ -42,11 +39,12 @@ class AuthorizationTablesSeeder extends Seeder
                 'order' => $lastOrder++,
                 'title' => 'Permissions',
                 'icon' => 'fas fa-ban',
-                'uri' => 'permissions',
+                'uri' => 'auth/permissions',
             ]);
         }
 
         // create a role.
+        $roles_model = config('elegant-utils.authorization.role.model');
         $roles_model::query()->truncate();
         $roles_model::query()->create([
             'name' => 'Administrator',
@@ -54,15 +52,16 @@ class AuthorizationTablesSeeder extends Seeder
         ]);
 
         // add role to user.
-        $administrator_model = config('elegant-utils.authorization.administrator.model');
-        $administrator_model::query()->first()->roles()->save($roles_model::query()->first());
+        $user_model = config('elegant-utils.admin.database.user_model');
+        $user_model::query()->first()->roles()->save($roles_model::query()->first());
 
         // add default permissions.
+        $permisssions_model = config('elegant-utils.authorization.permission.model');
         $permisssions_model::query()->truncate();
         $permisssions_model::query()->insert([
             [
                 'menu_id' => 0,
-                'name' => 'all',
+                'name' => trans('admin.all'),
                 'http' => '["*"]',
                 'created_at' => $date,
                 'updated_at' => $date,
@@ -77,189 +76,189 @@ class AuthorizationTablesSeeder extends Seeder
             [
                 'menu_id' => 2,
                 'name' => 'list',
-                'http' => '["HEADadministrators"]',
+                'http' => '["HEADauth/users"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 2,
                 'name' => 'create',
-                'http' => '["HEADadministrators/create","POSTadministrators"]',
+                'http' => '["HEADauth/users/create","POSTauth/users"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 2,
                 'name' => 'edit',
-                'http' => '["HEADadministrators/{administrator}/edit","PATCHadministrators/{administrator}"]',
+                'http' => '["HEADauth/users/{user}/edit","PATCHauth/users/{user}"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 2,
                 'name' => 'show',
-                'http' => '["HEADadministrators/{administrator}"]',
+                'http' => '["HEADauth/users/{user}"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 2,
                 'name' => 'destroy',
-                'http' => '["DELETEadministrators/{administrator}"]',
-                'created_at' => $date,
-                'updated_at' => $date,
-            ],
-            [
-                'menu_id' => 2,
-                'name' => 'delete',
-                'http' => '["DELETEadministrators/{administrator}/delete"]',
+                'http' => '["DELETEauth/users/{user}"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 2,
                 'name' => 'restore',
-                'http' => '["PUTadministrators/{administrator}/restore"]',
+                'http' => '["PUTauth/users/{user}/restore"]',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 2,
+                'name' => 'delete',
+                'http' => '["DELETEauth/users/{user}/delete"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 3,
                 'name' => 'list',
-                'http' => '["HEADmenus"]',
+                'http' => '["HEADauth/menus"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 3,
                 'name' => 'create',
-                'http' => '["POSTmenus"]',
+                'http' => '["POSTauth/menus"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 3,
                 'name' => 'edit',
-                'http' => '["HEADmenus/{menu}/edit","PATCHmenus/{menu}"]',
+                'http' => '["HEADauth/menus/{menu}/edit","PATCHauth/menus/{menu}"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 3,
                 'name' => 'destroy',
-                'http' => '["DELETEmenus/{menu}"]',
-                'created_at' => $date,
-                'updated_at' => $date,
-            ],
-            [
-                'menu_id' => 3,
-                'name' => 'delete',
-                'http' => '["DELETEmenus/{menu}/delete"]',
+                'http' => '["DELETEauth/menus/{menu}"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 3,
                 'name' => 'restore',
-                'http' => '["PUTmenus/{menu}/restore"]',
+                'http' => '["PUTauth/menus/{menu}/restore"]',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 3,
+                'name' => 'delete',
+                'http' => '["DELETEauth/menus/{menu}/delete"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 4,
                 'name' => 'list',
-                'http' => '["HEADroles"]',
+                'http' => '["HEADauth/roles"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 4,
                 'name' => 'create',
-                'http' => '["HEADroles/create","POSTroles"]',
+                'http' => '["HEADauth/roles/create","POSTauth/roles"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 4,
                 'name' => 'edit',
-                'http' => '["HEADroles/{role}/edit","PATCHroles/{role}"]',
+                'http' => '["HEADauth/roles/{role}/edit","PATCHauth/roles/{role}"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 4,
                 'name' => 'show',
-                'http' => '["HEADroles/{role}"]',
+                'http' => '["HEADauth/roles/{role}"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 4,
                 'name' => 'destroy',
-                'http' => '["DELETEroles/{role}"]',
-                'created_at' => $date,
-                'updated_at' => $date,
-            ],
-            [
-                'menu_id' => 4,
-                'name' => 'delete',
-                'http' => '["DELETEroles/{role}/delete"]',
+                'http' => '["DELETEauth/roles/{role}"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 4,
                 'name' => 'restore',
-                'http' => '["PUTroles/{role}/restore"]',
+                'http' => '["PUTauth/roles/{role}/restore"]',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 4,
+                'name' => 'delete',
+                'http' => '["DELETEauth/roles/{role}/delete"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 5,
                 'name' => 'list',
-                'http' => '["HEADpermissions"]',
+                'http' => '["HEADauth/permissions"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 5,
                 'name' => 'create',
-                'http' => '["HEADpermissions/create","POSTpermissions"]',
+                'http' => '["HEADauth/permissions/create","POSTauth/permissions"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 5,
                 'name' => 'edit',
-                'http' => '["HEADpermissions/{permission}/edit","PATCHpermissions/{permission}"]',
+                'http' => '["HEADauth/permissions/{permission}/edit","PATCHauth/permissions/{permission}"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 5,
                 'name' => 'show',
-                'http' => '["HEADpermissions/{permission}"]',
+                'http' => '["HEADauth/permissions/{permission}"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 5,
                 'name' => 'destroy',
-                'http' => '["DELETEpermissions/{permission}"]',
-                'created_at' => $date,
-                'updated_at' => $date,
-            ],
-            [
-                'menu_id' => 5,
-                'name' => 'delete',
-                'http' => '["DELETEpermissions/{permission}/delete"]',
+                'http' => '["DELETEauth/permissions/{permission}"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],
             [
                 'menu_id' => 5,
                 'name' => 'restore',
-                'http' => '["PUTpermissions/{permission}/restore"]',
+                'http' => '["PUTauth/permissions/{permission}/restore"]',
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+            [
+                'menu_id' => 5,
+                'name' => 'delete',
+                'http' => '["DELETEauth/permissions/{permission}/delete"]',
                 'created_at' => $date,
                 'updated_at' => $date,
             ],

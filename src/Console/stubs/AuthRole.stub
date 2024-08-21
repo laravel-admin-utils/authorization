@@ -1,0 +1,10 @@
+<?php
+
+namespace App\Models;
+
+use Elegant\Utils\Authorization\Models\AuthRole as BaseAuthRole;
+
+class AuthRole extends BaseAuthRole
+{
+
+}

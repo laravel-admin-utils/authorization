@@ -4,13 +4,13 @@ namespace Elegant\Utils\Authorization\Http\Controllers;
 
 use Elegant\Utils\Facades\Admin;
 use Elegant\Utils\Form;
-use Elegant\Utils\Http\Controllers\AdministratorController as Controller;
+use Elegant\Utils\Http\Controllers\AuthUserController as Controller;
 use Elegant\Utils\Models\Menu;
 use Elegant\Utils\Show;
 use Elegant\Utils\Table;
-use Elegant\Utils\Authorization\Models\Administrator;
+use Elegant\Utils\Authorization\Models\AuthUser;
 
-class AdministratorController extends Controller
+class AuthUserController extends Controller
 {
     /**
      * Make a table builder.
@@ -73,9 +73,8 @@ class AdministratorController extends Controller
      */
     public function form()
     {
-        $roleModel = config('elegant-utils.authorization.roles.model');
-        $permissionModel = config('elegant-utils.authorization.permissions.model');
-        $userTable = config('elegant-utils.admin.database.administrator_model');
+        $roleModel = config('elegant-utils.authorization.role.model');
+        $userTable = config('elegant-utils.admin.database.user_model');
         $connection = config('elegant-utils.admin.database.connection');
 
         $roles = $roleModel::with(['menus', 'permissions'])->get();
@@ -91,9 +90,9 @@ class AdministratorController extends Controller
         $form = new Form(new $this->model());
 
         $form->display('id', 'ID');
-        $form->text($this->fieldUsername, trans('admin. '. $this->fieldUsername))
+        $form->text('username', trans('admin.username'))
             ->creationRules(['required', "unique:{$connection}.{$userTable}"])
-            ->updateRules(['required', "unique:{$connection}.{$userTable},{$this->fieldUsername},{{id}}"]);
+            ->updateRules(['required', "unique:{$connection}.{$userTable},username,{{id}}"]);
 
         $form->text('name', trans('admin.name'))->rules('required');
         $form->image('avatar', trans('admin.avatar'));
@@ -107,7 +106,7 @@ class AdministratorController extends Controller
             ->options($roleModel::pluck('name', 'id'))
             ->optionDataAttributes('permissions', $rolePermissions)
             ->optionDataAttributes('menus', $roleMenus)
-            ->config('maximumSelectionLength', config('elegant-utils.authorization.users_maximum_roles', '0'));
+            ->config('maximumSelectionLength', config('elegant-utils.authorization.user_maximum_roles', '0'));
 
         $form->row(function (Form\Layout\Row $row) {
             $row->column(4, function (Form\Layout\Column $column) {
@@ -116,7 +115,7 @@ class AdministratorController extends Controller
                     ->related('roles', 'menus');;
             });
             $row->column(8, function (Form\Layout\Column $column) {
-                $permissionModel = config('elegant-utils.authorization.permissions.model');
+                $permissionModel = config('elegant-utils.authorization.permission.model');
                 $column->checkboxGroup('permissions', trans('admin.action').trans('admin.permissions'))
                     ->options($permissionModel::getOptions())
                     ->related('roles', 'permissions');

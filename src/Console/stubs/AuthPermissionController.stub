@@ -1,0 +1,10 @@
+<?php
+
+namespace DummyNamespace;
+
+use Elegant\Utils\Authorization\Http\Controllers\AuthPermissionController as BaseAuthPermissionController;
+
+class AuthPermissionController extends BaseAuthPermissionController
+{
+
+}

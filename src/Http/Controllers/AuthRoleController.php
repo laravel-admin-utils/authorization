@@ -11,7 +11,7 @@ use Elegant\Utils\Show;
 use Elegant\Utils\Table;
 use Illuminate\Support\Facades\Auth;
 
-class RoleController extends AdminController
+class AuthRoleController extends AdminController
 {
     /**
      * @return array|\Illuminate\Contracts\Translation\Translator|string|null
@@ -20,9 +20,13 @@ class RoleController extends AdminController
     {
         return trans('admin.roles');
     }
+
+    /**
+     * @return \Illuminate\Config\Repository|\Illuminate\Foundation\Application|mixed|string|null
+     */
     public function model()
     {
-        return config('elegant-utils.authorization.roles.model');
+        return config('elegant-utils.authorization.role.model');
     }
 
     /**
@@ -122,7 +126,7 @@ class RoleController extends AdminController
                     ->options(Admin::menu());
             });
             $row->column(8, function (Form\Layout\Column $column) {
-                $permissionModel = config('elegant-utils.authorization.permissions.model');
+                $permissionModel = config('elegant-utils.authorization.permission.model');
                 $column->checkboxGroup('permissions', trans('admin.action').trans('admin.permissions'))
                     ->options($permissionModel::getOptions());
             });

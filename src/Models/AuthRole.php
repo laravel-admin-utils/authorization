@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Role extends Model
+class AuthRole extends Model
 {
     use HasFactory;
     use DefaultDatetimeFormat;
@@ -31,7 +31,7 @@ class Role extends Model
 
         $this->setConnection($connection);
 
-        $this->setTable(config('elegant-utils.authorization.roles.table'));
+        $this->setTable(config('elegant-utils.authorization.role.table'));
 
         parent::__construct($attributes);
     }
@@ -41,12 +41,12 @@ class Role extends Model
      */
     public function administrators(): BelongsToMany
     {
-        $userModel = config('elegant-utils.authorization.administrator.model');
-        $table = config('elegant-utils.authorization.administrator_role_relational.table');
-        $role_id = config('elegant-utils.authorization.administrator_role_relational.role_id');
-        $administrator_id = config('elegant-utils.authorization.administrator_role_relational.administrator_id');
+        $userModel = config('elegant-utils.admin.database.user_model');
+        $table = config('elegant-utils.authorization.user_role_relational.table');
+        $role_id = config('elegant-utils.authorization.user_role_relational.role_id');
+        $user_id = config('elegant-utils.authorization.user_role_relational.user_id');
 
-        return $this->belongsToMany($userModel, $table, $role_id, $administrator_id)->withTimestamps();
+        return $this->belongsToMany($userModel, $table, $role_id, $user_id)->withTimestamps();
     }
 
     /**
@@ -54,7 +54,7 @@ class Role extends Model
      */
     public function permissions(): BelongsToMany
     {
-        $permissionModel = config('elegant-utils.authorization.permissions.model');
+        $permissionModel = config('elegant-utils.authorization.permission.model');
         $table = config('elegant-utils.authorization.role_permission_relational.table');
         $role_id = config('elegant-utils.authorization.role_permission_relational.role_id');
         $permission_id = config('elegant-utils.authorization.role_permission_relational.permission_id');
@@ -67,7 +67,7 @@ class Role extends Model
      */
     public function menus(): BelongsToMany
     {
-        $menuModel = config('elegant-utils.admin.database.menus_model');
+        $menuModel = config('elegant-utils.admin.database.menu_model');
         $table = config('elegant-utils.authorization.role_menu_relational.table');
         $role_id = config('elegant-utils.authorization.role_menu_relational.role_id');
         $menu_id = config('elegant-utils.authorization.role_menu_relational.menu_id');

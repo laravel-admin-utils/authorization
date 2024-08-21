@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create(config('elegant-utils.authorization.roles.table'), function (Blueprint $table) {
+        Schema::create(config('elegant-utils.authorization.role.table'), function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
             $table->string('slug', 50)->unique();
@@ -29,13 +29,13 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create(config('elegant-utils.authorization.administrator_role_relational.table'), function (Blueprint $table) {
-            $table->unsignedBigInteger(config('elegant-utils.authorization.administrator_role_relational.administrator_id'))->index();
-            $table->unsignedBigInteger(config('elegant-utils.authorization.administrator_role_relational.role_id'))->index();
+        Schema::create(config('elegant-utils.authorization.user_role_relational.table'), function (Blueprint $table) {
+            $table->unsignedBigInteger(config('elegant-utils.authorization.user_role_relational.user_id'))->index();
+            $table->unsignedBigInteger(config('elegant-utils.authorization.user_role_relational.role_id'))->index();
             $table->timestamps();
         });
 
-        Schema::create(config('elegant-utils.authorization.permissions.table'), function (Blueprint $table) {
+        Schema::create(config('elegant-utils.authorization.permission.table'), function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('menu_id')->default(0);
             $table->string('name', 50);
@@ -50,9 +50,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create(config('elegant-utils.authorization.administrator_permission_relational.table'), function (Blueprint $table) {
-            $table->unsignedBigInteger(config('elegant-utils.authorization.administrator_permission_relational.administrator_id'))->index();
-            $table->unsignedBigInteger(config('elegant-utils.authorization.administrator_permission_relational.permission_id'))->index();
+        Schema::create(config('elegant-utils.authorization.user_permission_relational.table'), function (Blueprint $table) {
+            $table->unsignedBigInteger(config('elegant-utils.authorization.user_permission_relational.user_id'))->index();
+            $table->unsignedBigInteger(config('elegant-utils.authorization.user_permission_relational.permission_id'))->index();
             $table->timestamps();
         });
 
@@ -62,9 +62,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create(config('elegant-utils.authorization.administrator_menu_relational.table'), function (Blueprint $table) {
-            $table->unsignedBigInteger(config('elegant-utils.authorization.administrator_menu_relational.administrator_id'))->index();
-            $table->unsignedBigInteger(config('elegant-utils.authorization.administrator_menu_relational.menu_id'))->index();
+        Schema::create(config('elegant-utils.authorization.user_menu_relational.table'), function (Blueprint $table) {
+            $table->unsignedBigInteger(config('elegant-utils.authorization.user_menu_relational.user_id'))->index();
+            $table->unsignedBigInteger(config('elegant-utils.authorization.user_menu_relational.menu_id'))->index();
             $table->timestamps();
         });
     }
@@ -76,12 +76,12 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('elegant-utils.authorization.roles.table'));
-        Schema::dropIfExists(config('elegant-utils.authorization.administrator_role_relational.table'));
-        Schema::dropIfExists(config('elegant-utils.authorization.permissions.table'));
+        Schema::dropIfExists(config('elegant-utils.authorization.role.table'));
+        Schema::dropIfExists(config('elegant-utils.authorization.user_role_relational.table'));
+        Schema::dropIfExists(config('elegant-utils.authorization.permission.table'));
         Schema::dropIfExists(config('elegant-utils.authorization.role_permission_relational.table'));
-        Schema::dropIfExists(config('elegant-utils.authorization.administrator_permission_relational.table'));
+        Schema::dropIfExists(config('elegant-utils.authorization.user_permission_relational.table'));
         Schema::dropIfExists(config('elegant-utils.authorization.role_menu_relational.table'));
-        Schema::dropIfExists(config('elegant-utils.authorization.administrator_menu_relational.table'));
+        Schema::dropIfExists(config('elegant-utils.authorization.user_menu_relational.table'));
     }
 };

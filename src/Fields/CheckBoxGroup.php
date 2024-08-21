@@ -50,7 +50,7 @@ class CheckBoxGroup extends Checkbox
     public function render()
     {
         $this->addVariables([
-            'column'       => $this->column,
+            'column'        => $this->column,
             'checked'       => $this->checked,
             'inline'        => $this->inline,
             'checkAllClass' => uniqid('check-all-'),

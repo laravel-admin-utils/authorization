@@ -2,14 +2,14 @@
 
 namespace Elegant\Utils\Authorization\Models;
 
-use Elegant\Utils\Models\Administrator as BaseModel;
+use Elegant\Utils\Models\AuthUser as BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Routing\Route;
 
 /**
  * @method static find(int $int)
  */
-class Administrator extends BaseModel
+class AuthUser extends BaseModel
 {
     /**
      * Current user roles
@@ -18,12 +18,12 @@ class Administrator extends BaseModel
      */
     public function roles(): BelongsToMany
     {
-        $roleModel = config('elegant-utils.authorization.roles.model');
-        $table = config('elegant-utils.authorization.administrator_role_relational.table');
-        $administrator_id = config('elegant-utils.authorization.administrator_role_relational.administrator_id');
-        $role_id = config('elegant-utils.authorization.administrator_role_relational.role_id');
+        $roleModel = config('elegant-utils.authorization.role.model');
+        $table = config('elegant-utils.authorization.user_role_relational.table');
+        $user_id = config('elegant-utils.authorization.user_role_relational.user_id');
+        $role_id = config('elegant-utils.authorization.user_role_relational.role_id');
 
-        return $this->belongsToMany($roleModel, $table, $administrator_id, $role_id)->withTimestamps();
+        return $this->belongsToMany($roleModel, $table, $user_id, $role_id)->withTimestamps();
     }
 
     /**
@@ -31,12 +31,12 @@ class Administrator extends BaseModel
      */
     public function permissions(): BelongsToMany
     {
-        $permissionModel = config('elegant-utils.authorization.permissions.model');
-        $table = config('elegant-utils.authorization.administrator_permission_relational.table');
-        $administrator_id = config('elegant-utils.authorization.administrator_permission_relational.administrator_id');
-        $permission_id = config('elegant-utils.authorization.administrator_permission_relational.permission_id');
+        $permissionModel = config('elegant-utils.authorization.permission.model');
+        $table = config('elegant-utils.authorization.user_permission_relational.table');
+        $user_id = config('elegant-utils.authorization.user_permission_relational.user_id');
+        $permission_id = config('elegant-utils.authorization.user_permission_relational.permission_id');
 
-        return $this->belongsToMany($permissionModel, $table, $administrator_id, $permission_id)->withTimestamps();
+        return $this->belongsToMany($permissionModel, $table, $user_id, $permission_id)->withTimestamps();
     }
 
     /**
@@ -44,12 +44,12 @@ class Administrator extends BaseModel
      */
     public function menus(): BelongsToMany
     {
-        $menuModel = config('elegant-utils.admin.database.menus_model');
-        $table = config('elegant-utils.authorization.administrator_menu_relational.table');
-        $administrator_id = config('elegant-utils.authorization.administrator_menu_relational.administrator_id');
-        $menu_id = config('elegant-utils.authorization.administrator_menu_relational.menu_id');
+        $menuModel = config('elegant-utils.admin.database.menu_model');
+        $table = config('elegant-utils.authorization.user_menu_relational.table');
+        $user_id = config('elegant-utils.authorization.user_menu_relational.user_id');
+        $menu_id = config('elegant-utils.authorization.user_menu_relational.menu_id');
 
-        return $this->belongsToMany($menuModel, $table, $administrator_id, $menu_id)->withTimestamps();
+        return $this->belongsToMany($menuModel, $table, $user_id, $menu_id)->withTimestamps();
     }
 
     /**
@@ -68,11 +68,17 @@ class Administrator extends BaseModel
         return array_merge(call_user_func_array('array_merge', $this->roleMenus->pluck('menus')->toArray()), $this->menus->toArray());
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder|BelongsToMany
+     */
     public function rolePermissions()
     {
         return $this->roles()->with('permissions');
     }
 
+    /**
+     * @return array
+     */
     public function allPermissions()
     {
         return array_merge(call_user_func_array('array_merge', $this->rolePermissions->pluck('permissions')->toArray()), $this->permissions->toArray());
@@ -123,12 +129,7 @@ class Administrator extends BaseModel
         $methods = $route->methods();
 
         foreach ($this->allPermissions() as $permissions) {
-            if ($permissions['http'] === '*') {
-                return true;
-            }
-            if (in_array(end($methods).$domainAndUri, $permissions['http'])) {
-                return true;
-            }
+            return in_array('*', $permissions['http']) || in_array(end($methods).$domainAndUri, $permissions['http']);
         }
 
         return false;

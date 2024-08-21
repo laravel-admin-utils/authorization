@@ -10,9 +10,7 @@ class Authorization extends Extension
 
     public $views = __DIR__ . '/../resources/views';
 
-    public $routes = __DIR__ . '/../routes/web.php';
+    public $config = __DIR__ . '/../config';
 
     public $database = __DIR__ . '/../database';
-
-    public $config = __DIR__ . '/../config';
 }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Permission extends Model
+class AuthPermission extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -32,14 +32,14 @@ class Permission extends Model
     /**
      * @return BelongsToMany
      */
-    public function administrators(): BelongsToMany
+    public function users(): BelongsToMany
     {
-        $userModel = config('elegant-utils.authorization.administrator.model');
-        $table = config('elegant-utils.authorization.administrator_permission_relational.table');
-        $permission_id = config('elegant-utils.authorization.administrator_permission_relational.permission_id');
-        $administrator_id = config('elegant-utils.authorization.administrator_permission_relational.administrator_id');
+        $userModel = config('elegant-utils.admin.database.user_model');
+        $table = config('elegant-utils.authorization.user_permission_relational.table');
+        $permission_id = config('elegant-utils.authorization.user_permission_relational.permission_id');
+        $user_id = config('elegant-utils.authorization.user_permission_relational.user_id');
 
-        return $this->belongsToMany($userModel, $table, $permission_id, $administrator_id)->withTimestamps();
+        return $this->belongsToMany($userModel, $table, $permission_id, $user_id)->withTimestamps();
     }
 
     /**
@@ -47,7 +47,7 @@ class Permission extends Model
      */
     public function roles(): BelongsToMany
     {
-        $roleModel = config('elegant-utils.authorization.roles.model');
+        $roleModel = config('elegant-utils.authorization.role.model');
         $table = config('elegant-utils.authorization.role_permission_relational.table');
         $permission_id = config('elegant-utils.authorization.role_permission_relational.permission_id');
         $role_id = config('elegant-utils.authorization.role_permission_relational.role_id');
@@ -57,7 +57,7 @@ class Permission extends Model
 
     public function menu()
     {
-        $menuModel = config('elegant-utils.admin.database.menus_model');
+        $menuModel = config('elegant-utils.admin.database.menu_model');
 
         return $this->belongsTo($menuModel, 'menu_id');
     }
