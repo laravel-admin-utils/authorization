@@ -45,7 +45,7 @@ return [
 //    'user_maximum_roles' => 0,
 
     // The name of the route to be excluded
-    'excludes' => [
+    'excepts' => [
         'logout',
         'setting',
         'setting.update',

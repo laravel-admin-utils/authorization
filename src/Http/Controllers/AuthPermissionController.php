@@ -110,7 +110,7 @@ class AuthPermissionController extends AdminController
         $data = [];
 
         foreach (Route::getRoutes() as $route) {
-            if (isset($route->getAction()['middleware']) && in_array('admin', $route->getAction()['middleware']) && !in_array($route->getAction()['as'], config('elegant-utils.authorization.excludes'))) {
+            if (isset($route->getAction()['middleware']) && in_array('admin', $route->getAction()['middleware']) && !in_array($route->getAction()['as'], config('elegant-utils.authorization.excepts'))) {
                 $domainAndUri = $route->getDomain().$route->uri();
 
                 $methods = $route->methods();

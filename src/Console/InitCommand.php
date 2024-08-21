@@ -154,7 +154,7 @@ class InitCommand extends Command
     public function addRoutes()
     {
         // If no role routing exists
-        if (!Route::has('auth.roles.index')) {
+        if (!Route::has('auth_roles.index')) {
             $routes = $this->directory . '\routes.php';
             $routes_contents = $this->laravel['files']->get($routes);
 
