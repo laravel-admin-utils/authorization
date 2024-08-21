@@ -18,6 +18,9 @@ class AuthorizationServiceProvider extends ServiceProvider
         Console\InitCommand::class,
     ];
 
+    /**
+     * @var array 
+     */
     protected $middlewareGroups = [];
 
     /**

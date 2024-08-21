@@ -55,6 +55,9 @@ class AuthPermission extends Model
         return $this->belongsToMany($roleModel, $table, $permission_id, $role_id)->withTimestamps();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function menu()
     {
         $menuModel = config('elegant-utils.admin.database.menu_model');
@@ -62,6 +65,9 @@ class AuthPermission extends Model
         return $this->belongsTo($menuModel, 'menu_id');
     }
 
+    /**
+     * @return array
+     */
     public static function getOptions()
     {
         $permissionModel = new static();
