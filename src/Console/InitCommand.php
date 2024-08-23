@@ -2,6 +2,7 @@
 
 namespace Elegant\Utils\Authorization\Console;
 
+use Elegant\Utils\Authorization\Authorization;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Route;
 
@@ -48,79 +49,9 @@ class InitCommand extends Command
     {
         $this->directory = config('elegant-utils.admin.directory');
 
-        $this->createAuthRoleController();
-        $this->createAuthPermissionController();
-
-        $this->createAuthRoleModel();
-        $this->createAuthPermissionModel();
-
         $this->replaceAuthUser();
 
-        $this->addRoutes();
-
         $this->initDatabase();
-    }
-
-    /**
-     * Create AuthRoleController.
-     *
-     * @return void
-     */
-    public function createAuthRoleController()
-    {
-        $controller = $this->directory.'\Controllers\AuthRoleController.php';
-        $contents = $this->getStub('AuthRoleController');
-
-        $this->laravel['files']->put(
-            $controller,
-            str_replace('DummyNamespace', config('elegant-utils.admin.route.namespace'), $contents)
-        );
-        $this->line('<info>AuthRoleController file was created:</info> '.str_replace(base_path(), '', $controller));
-    }
-
-    /**
-     * Create AuthPermissionController.
-     *
-     * @return void
-     */
-    public function createAuthPermissionController()
-    {
-        $controller = $this->directory.'\Controllers\AuthPermissionController.php';
-        $contents = $this->getStub('AuthPermissionController');
-
-        $this->laravel['files']->put(
-            $controller,
-            str_replace('DummyNamespace', config('elegant-utils.admin.route.namespace'), $contents)
-        );
-        $this->line('<info>AuthPermissionController file was created:</info> '.str_replace(base_path(), '', $controller));
-    }
-
-    /**
-     * Create AuthRoleModel.
-     *
-     * @return void
-     */
-    public function createAuthRoleModel()
-    {
-        $model = app_path('Models\AuthRole.php');
-        $contents = $this->getStub('AuthRole');
-
-        $this->laravel['files']->put($model, $contents);
-        $this->line('<info>AuthRole file was created:</info> '.str_replace(base_path(), '', $model));
-    }
-
-    /**
-     * Create AuthPermissionModel.
-     *
-     * @return void
-     */
-    public function createAuthPermissionModel()
-    {
-        $model = app_path('Models\AuthPermission.php');
-        $contents = $this->getStub('AuthPermission');
-
-        $this->laravel['files']->put($model, $contents);
-        $this->line('<info>AuthPermission file was created:</info> '.str_replace(base_path(), '', $model));
     }
 
     /**
@@ -147,25 +78,6 @@ class InitCommand extends Command
     }
 
     /**
-     * Add roles and permission routes
-     *
-     * @return void
-     */
-    public function addRoutes()
-    {
-        // If no role routing exists
-        if (!Route::has('auth_roles.index')) {
-            $routes = $this->directory . '\routes.php';
-            $routes_contents = $this->laravel['files']->get($routes);
-
-            $search = "        // done Don't delete this line of comment";
-            $replace = $this->getStub('routes');
-
-            $this->laravel['files']->put($routes, str_replace($search, $replace, $routes_contents));
-        }
-    }
-
-    /**
      * Create tables and seed it.
      *
      * @return void
@@ -174,18 +86,8 @@ class InitCommand extends Command
     {
         $this->call('migrate');
 
-        $this->call('db:seed', ['--class' => \Database\Seeders\AuthorizationTablesSeeder::class]);
-    }
+        Authorization::import();
 
-    /**
-     * Get stub contents.
-     *
-     * @param $name
-     *
-     * @return string
-     */
-    protected function getStub($name)
-    {
-        return $this->laravel['files']->get(__DIR__."/stubs/$name.stub");
+        $this->call('db:seed', ['--class' => \Database\Seeders\AuthorizationTablesSeeder::class]);
     }
 }

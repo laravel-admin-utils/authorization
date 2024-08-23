@@ -19,7 +19,7 @@ class AuthorizationServiceProvider extends ServiceProvider
     ];
 
     /**
-     * @var array 
+     * @var array
      */
     protected $middlewareGroups = [];
 
@@ -38,6 +38,10 @@ class AuthorizationServiceProvider extends ServiceProvider
             $this->publishes([$extension->config => config_path('elegant-utils')], 'admin-authorize-config');
             $this->publishes([$extension->database => database_path()], 'admin-authorize-migrations');
         }
+
+        $this->app->booted(function () use ($extension) {
+            $extension::routes($extension->routes);
+        });
     }
 
     /**

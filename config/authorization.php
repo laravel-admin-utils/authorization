@@ -3,12 +3,14 @@
 return [
     'role' => [
         'table' => 'auth_roles',
-        'model' => App\Models\AuthRole::class,
+        'model' => Elegant\Utils\Authorization\Models\AuthRole::class,
+        'controller' => Elegant\Utils\Authorization\Http\Controllers\AuthRoleController::class,
     ],
 
     'permission' => [
         'table' => 'auth_permissions',
-        'model' => App\Models\AuthPermission::class,
+        'model' => Elegant\Utils\Authorization\Models\AuthPermission::class,
+        'controller' => Elegant\Utils\Authorization\Http\Controllers\AuthPermissionController::class,
     ],
 
     'user_role_relational' => [

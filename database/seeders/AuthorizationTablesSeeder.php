@@ -16,32 +16,6 @@ class AuthorizationTablesSeeder extends Seeder
     public function run()
     {
         $date = date('Y-m-d H:i:s');
-        $menus_model = config('elegant-utils.admin.database.menu_model');
-
-        // If a role menu does not exist, create one
-        if (!$menus_model::query()->where('uri', 'auth/roles')->exists()) {
-            // 创建菜单项
-            $lastOrder = $menus_model::query()->max('order');
-            $menus_model::query()->create([
-                'parent_id' => 0,
-                'order' => $lastOrder++,
-                'title' => 'Roles',
-                'icon' => 'fas fa-user',
-                'uri' => 'auth/roles',
-            ]);
-        }
-        // If the permissions menu does not exist, create one
-        if (!$menus_model::query()->where('uri', 'auth/permissions')->exists()) {
-            // 创建菜单项
-            $lastOrder = $menus_model::query()->max('order');
-            $menus_model::query()->create([
-                'parent_id' => 0,
-                'order' => $lastOrder++,
-                'title' => 'Permissions',
-                'icon' => 'fas fa-ban',
-                'uri' => 'auth/permissions',
-            ]);
-        }
 
         // create a role.
         $roles_model = config('elegant-utils.authorization.role.model');
