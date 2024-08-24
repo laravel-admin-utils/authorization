@@ -36,6 +36,8 @@ class InitCommand extends Command
      */
     public function __construct()
     {
+        $this->directory = config('elegant-utils.admin.directory');
+
         parent::__construct();
     }
 
@@ -47,11 +49,13 @@ class InitCommand extends Command
      */
     public function handle()
     {
-        $this->directory = config('elegant-utils.admin.directory');
-
         $this->replaceAuthUser();
+        
+        $this->call('migrate');
 
-        $this->initDatabase();
+        Authorization::importMenus();
+
+        $this->call('db:seed', ['--class' => Database\Seeders\AuthorizationTablesSeeder::class]);
     }
 
     /**
@@ -75,19 +79,5 @@ class InitCommand extends Command
             $model,
             str_replace('Elegant\Utils\Models\AuthUser', 'Elegant\Utils\Authorization\Models\AuthUser', $model_contents)
         );
-    }
-
-    /**
-     * Create tables and seed it.
-     *
-     * @return void
-     */
-    public function initDatabase()
-    {
-        $this->call('migrate');
-
-        Authorization::import();
-
-        $this->call('db:seed', ['--class' => \Database\Seeders\AuthorizationTablesSeeder::class]);
     }
 }
